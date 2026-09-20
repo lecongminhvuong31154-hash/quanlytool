@@ -85,7 +85,7 @@ input[type=checkbox]{width:22px;height:22px}
   border:0;border-radius:10px;min-height:40px;padding:0 15px;cursor:pointer;font-weight:700
 }
 .primary{background:var(--blue);color:#fff}.secondary{background:#edf4ff;color:#3866ad}
-.danger{background:#fff0f3;color:#d94860}
+.danger{background:#fff0f3;color:#d94860}.delete-account{border:0;border-radius:8px;min-height:40px;padding:0 15px;cursor:pointer;font-weight:700;background:#e5485d;color:#fff;margin-left:4px}.delete-account:hover{filter:brightness(.96)}
 button:disabled{opacity:.48;cursor:not-allowed}
 .toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
 .table-wrap{overflow:auto}
@@ -633,6 +633,7 @@ async function loadAccounts(){
             ${a.locked ? "Mở khóa" : "Khóa"}
           </button>
           <button class="secondary" onclick="resetKey(${a.id})">Đổi KEY</button>
+          <button class="delete-account" onclick="deleteAccount(${a.id}, \'${escAttr(a.user_id)}\')">Xóa</button>
         </td>
       `;
       accountsBody.appendChild(tr);
@@ -691,6 +692,27 @@ async function resetKey(id){
     keyModal.classList.add("show");
     await loadAccounts();
   } catch(e) { alert(e.message); }
+}
+
+
+async function deleteAccount(id, userId){
+  const ok = confirm(
+    `Xóa vĩnh viễn ID "${userId}"?\n\n` +
+    `Thao tác này sẽ xóa luôn KEY và toàn bộ thiết bị đã bind của ID này.\n` +
+    `Không thể hoàn tác.`
+  );
+  if (!ok) return;
+
+  try {
+    await api(`/api/admin/accounts/${id}/delete`, {
+      method:"POST",
+      body:"{}"
+    });
+    await loadAccounts();
+    await loadStats();
+  } catch(e) {
+    alert(e.message);
+  }
 }
 
 async function loadStats(){

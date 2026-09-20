@@ -45,3 +45,7 @@ Backend phải cho phép origin:
 `https://lecongminhvuong31154-hash.github.io`
 
 Backend mẫu trong gói private đi kèm đã hỗ trợ việc này.
+
+
+## Bản v2
+- Thêm nút **Xóa** màu đỏ sau **Đổi KEY** cho từng ID.
